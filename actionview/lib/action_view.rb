@@ -66,6 +66,7 @@ module ActionView
 
     autoload_at "action_view/buffers" do
       autoload :OutputBuffer
+      autoload :OutputBufferFrame
       autoload :StreamingBuffer
     end
 
