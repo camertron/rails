@@ -11,6 +11,14 @@ module ActionView
     # It provides a method to capture blocks into variables through capture and
     # a way to capture a block of markup for use in a layout through {content_for}[rdoc-ref:ActionView::Helpers::CaptureHelper#content_for].
     module CaptureHelper
+      mattr_accessor :replace_output_buffer_with, default: -> (view_context, buf, &block) do
+        view_context.output_buffer, old_buffer = buf, view_context.output_buffer
+        block.call
+        view_context.output_buffer
+      ensure
+        view_context.output_buffer = old_buffer
+      end
+
       # The capture method extracts part of a template as a String object.
       # You can then use this object anywhere in your templates, layout, or helpers.
       #
@@ -198,18 +206,15 @@ module ActionView
 
       # Use an alternate output buffer for the duration of the block.
       # Defaults to a new empty string.
-      def with_output_buffer(buf = nil) # :nodoc:
+      def with_output_buffer(buf = nil, &block) # :nodoc:
         unless buf
           buf = ActionView::OutputBuffer.new
           if output_buffer && output_buffer.respond_to?(:encoding)
             buf.force_encoding(output_buffer.encoding)
           end
         end
-        self.output_buffer, old_buffer = buf, output_buffer
-        yield
-        output_buffer
-      ensure
-        self.output_buffer = old_buffer
+
+        replace_output_buffer_with.call(self, buf, &block)
       end
     end
   end
