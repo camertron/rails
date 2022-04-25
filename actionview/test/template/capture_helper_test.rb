@@ -188,7 +188,7 @@ class CaptureHelperTest < ActionView::TestCase
 
   def test_with_output_buffer_swaps_the_output_buffer_with_an_argument
     assert_nil @av.output_buffer
-    buffer = ActionView::OutputBuffer.new(".")
+    buffer = ActionView::OutputBuffer.new(+".")
     @av.with_output_buffer(buffer) do
       @av.output_buffer << "."
     end
