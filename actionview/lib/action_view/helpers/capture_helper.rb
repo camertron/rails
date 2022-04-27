@@ -200,16 +200,25 @@ module ActionView
       # Defaults to a new empty string.
       def with_output_buffer(buf = nil) # :nodoc:
         unless buf
-          buf = ActionView::OutputBuffer.new
+          buf = ActionView::OutputBufferFrame.new
           if output_buffer && output_buffer.respond_to?(:encoding)
             buf.force_encoding(output_buffer.encoding)
           end
         end
-        self.output_buffer, old_buffer = buf, output_buffer
-        yield
-        output_buffer
-      ensure
-        self.output_buffer = old_buffer
+
+        self.output_buffer ||= ActionView::OutputBuffer.new
+        output_buffer.push(buf)
+        result = nil
+
+        begin
+          yield
+        ensure
+          # assign result here to avoid a return statement, which will
+          # immediately return to the caller and swallow any errors
+          result = output_buffer.pop
+        end
+
+        result
       end
     end
   end

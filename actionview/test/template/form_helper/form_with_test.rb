@@ -185,7 +185,7 @@ end
 
 class FormWithActsLikeFormForTest < FormWithTest
   def form_with(*, **)
-    @output_buffer = super
+    @output_buffer = ActionView::OutputBuffer.new(super)
   end
 
   teardown do

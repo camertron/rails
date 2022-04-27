@@ -15,7 +15,7 @@ class CaptureHelperTest < ActionView::TestCase
       @av.output_buffer << "foo"
       @av.output_buffer << "bar"
     end
-    assert_nil @av.output_buffer
+    assert_empty @av.output_buffer
     assert_equal "foobar", string
   end
 
@@ -183,7 +183,7 @@ class CaptureHelperTest < ActionView::TestCase
       @av.output_buffer << "."
     end
     assert_equal ".", buffer
-    assert_nil @av.output_buffer
+    assert_empty @av.output_buffer
   end
 
   def test_with_output_buffer_swaps_the_output_buffer_with_an_argument
@@ -193,7 +193,7 @@ class CaptureHelperTest < ActionView::TestCase
       @av.output_buffer << "."
     end
     assert_equal "..", buffer
-    assert_nil @av.output_buffer
+    assert_empty @av.output_buffer
   end
 
   def test_with_output_buffer_restores_the_output_buffer

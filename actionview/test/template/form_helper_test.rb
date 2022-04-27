@@ -19,7 +19,7 @@ class FormHelperTest < ActionView::TestCase
   end
 
   def form_for(*)
-    @output_buffer = super
+    @output_buffer = ActionView::OutputBuffer.new(super)
   end
 
   teardown do
