@@ -24,7 +24,7 @@ module ActionView
     end
 
     def replace(buffer)
-      return if self == buffer
+      return if object_id == buffer.object_id
 
       @current_buffer = buffer.current
       @buffer_stack = buffer.buffer_stack
